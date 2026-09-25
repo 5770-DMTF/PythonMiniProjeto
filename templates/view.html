@@ -16,7 +16,12 @@
                 <td>{{ loop.index }}</td>
                 <td>{{ u.nome }}</td>
                 <td>{{ u.email }}</td>
-                <td>{{ u.cargo }}</td>
+                <td> {% if u.cargo == 1 %}
+                        User
+                    {% else %}
+                        Admin
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     </tbody>

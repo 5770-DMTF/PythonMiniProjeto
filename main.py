@@ -175,7 +175,7 @@ def tarefas(email):
             flash("Tarefa adicionada com sucesso.")
             return redirect(url_for('tarefas', email=email))
 
-    lista_tarefas = Tarefas.query.filter_by(idUtilizador=utilizador.id).all()
+    lista_tarefas = Tarefas.query.filter_by(idUtilizador=utilizador.id).order_by(Tarefas.estado.asc()).all()
     return render_template('tarefas.html', email=utilizador.email, tarefas=lista_tarefas)
 
 @app.route('/view')
