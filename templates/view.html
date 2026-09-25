@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Utilizadores {% endblock %}
+{% block content %}
+<table class="table table-dark table-striped mt-3 align-middle">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">nome</th>
+            <th scope="col">email</th>
+            <th scope="col">cargo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in utilizadores %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ u.nome }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.cargo }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

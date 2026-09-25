@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Utilizadores{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Bem-vindo: {{ email }}</h2>
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#AdicionarTarefa">
+                Adicionar Tarefa
+            </button>
+        </div>
+
+        <!-- Tabela de Tarefas -->
+        <table class="table table-dark table-striped mt-3 align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tarefa</th>
+                    <th scope="col">Data Limite</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Estado</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for t in tarefas %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ t.tarefa }}</td>
+        <td>
+            {% if t.dataLimite and t.dataLimite.strftime %}
+                {{ t.dataLimite.strftime('%d/%m/%Y') }}
+            {% else %}
+                <span class="text-muted"></span>
+            {% endif %}
+        </td>
+        <td>{{ t.descricao or '' }}</td>
+        <td>
+            {% if t.estado %}
+                <span class="badge bg-success">Concluído</span>
+            {% else %}
+                <span class="badge bg-warning text-dark">Por Concluir</span>
+            {% endif %}
+        </td>
+        <td>
+            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditar{{ t.id }}">
+                Editar
+            </button>
+
+            <a href="{{ url_for('concluir_tarefa', id=t.id) }}" class="btn btn-sm btn-success">
+                {% if t.estado %}Reabrir Tarefa{% else %}Concluir{% endif %}
+            </a>
+
+            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar{{ t.id }}">
+                Eliminar
+            </button>
+
+
+            <div class="modal fade" id="modalEditar{{ t.id }}" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content text-dark">
+                  <form action="{{ url_for('editar_tarefa', id=t.id) }}" method="POST">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Editar: {{ t.tarefa }}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label class="form-label">Nome da Tarefa</label>
+                        <input type="text" class="form-control" name="tarefa" value="{{ t.tarefa }}" required>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Descrição</label>
+                        <input type="text" class="form-control" name="descricao" value="{{ t.descricao or '' }}">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="modalEliminar{{ t.id }}" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content text-dark">
+                  <form action="{{ url_for('eliminar_tarefa', id=t.id) }}" method="POST">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Eliminar: {{ t.tarefa }}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="form-label">Prentende Eliminar a tarefa {{ t.tarefa }}.</label>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+        </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="6" class="text-center text-muted">Nenhuma tarefa encontrada.</td>
+    </tr>
+    {% endfor %}
+</tbody>
+        </table>
+    </div>
+
+    <!-- Modal Adicionar Tarefa -->
+    <div class="modal fade" id="AdicionarTarefa" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Adicionar Tarefa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="inputTarefa" class="form-label">Tarefa</label>
+                            <input id="inputTarefa" name="tarefa" class="form-control" type="text" placeholder="Insira o título da tarefa" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputData" class="form-label">Data Limite</label>
+                            <input id="inputData" name="dataLimite" class="form-control" type="date" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputDescricao" class="form-label">Descrição</label>
+                            <textarea id="inputDescricao" name="descricao" class="form-control" rows="3" placeholder="Insira a descrição da tarefa"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

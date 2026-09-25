@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %} Contactos {% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center gap-5">
+    <div class="card d-flex justify-content-center align-items-center p-4" style="width: 18rem;">
+        <img src="{{ url_for('static', filename='tarefasConcluidas.svg') }}" class="card border border-0" alt="Simbolo Tarefas Pendentes">
+        <div class="card-body">
+            <p class="card-text fs-4"> Tarefas Concluidas </p>
+            <p class="card-text"> {{ concluidas }}</p>
+        </div>
+    </div>
+    <div class="card d-flex justify-content-center align-items-center p-4" style="width: 18rem;">
+        <img src="{{ url_for('static', filename='tarefasPendentes.svg') }}" class="card border border-0" alt="Simbolo Tarefas Pendentes">
+        <div class="card-body">
+            <p class="card-text fs-4"> Tarefas Pendentes </p>
+            <p class="card-text"> {{ pendentes }}</p>
+        </div>
+    </div>
+    <div class="card d-flex justify-content-center align-items-center p-4" style="width: 18rem;">
+        <img src="{{ url_for('static', filename='todasTarefas.svg') }}" class="card border border-0" alt="Simbolo Tarefas Pendentes">
+        <div class="card-body">
+            <p class="card-text fs-4"> Total Tarefas </p>
+            <p class="card-text"> {{ tarefas }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
