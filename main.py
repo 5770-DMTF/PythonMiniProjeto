@@ -183,6 +183,10 @@ def view():
     if "user" not in session:
         flash("Tem de efetuar o login.")
         return redirect(url_for('login'))
+    if session.get('cargo_id') != 2:
+        flash("Acesso não permitido.")
+        return redirect(url_for('index'))
+
 
     todos_utilizadores = Users.query.all()
     return render_template('view.html', utilizadores=todos_utilizadores)

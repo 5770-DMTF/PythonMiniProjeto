@@ -1,7 +1,17 @@
 {% extends "base.html" %}
 {% block title %} Contactos {% endblock %}
 {% block content %}
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
 <div class="d-flex justify-content-center align-items-center gap-5">
+        {% endwith %}
     <div class="card d-flex justify-content-center align-items-center p-4" style="width: 18rem;">
         <img src="{{ url_for('static', filename='tarefasConcluidas.svg') }}" class="card border border-0" alt="Simbolo Tarefas Pendentes">
         <div class="card-body">
